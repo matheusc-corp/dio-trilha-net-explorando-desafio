@@ -10,14 +10,10 @@ namespace DesafioProjetoHospedagem.Models
     {
         List<Pessoa> listaHospedes = new List<Pessoa>();
         List<Suite> listaSuites = new List<Suite>();
-        Pessoa pessoa = new Pessoa();
-        Suite suite = new Suite();
 
         public void MenuPrincipal()
         {
             int opc = 0;
-
-            // Console.Clear();
 
             System.Console.WriteLine("Administração de suites\n");
             System.Console.WriteLine(
@@ -30,7 +26,7 @@ namespace DesafioProjetoHospedagem.Models
             );
 
             opc = Convert.ToInt32(Console.ReadLine());
-            // Console.Clear();
+            Console.Clear();
 
             switch (opc)
             {
@@ -58,6 +54,8 @@ namespace DesafioProjetoHospedagem.Models
 
         public Pessoa RegistrarHospede()
         {
+            Pessoa pessoa = new Pessoa();
+
             System.Console.WriteLine("Cadastro de hóspede\n");
 
             System.Console.Write("Primeiro nome: ");
@@ -71,6 +69,8 @@ namespace DesafioProjetoHospedagem.Models
 
         public Suite RegistrarSuite()
         {
+            Suite suite = new Suite();
+
             System.Console.WriteLine("Cadastro de suite\n");
 
             System.Console.Write("Nome da suite: ");
@@ -105,6 +105,7 @@ namespace DesafioProjetoHospedagem.Models
         public void ListarSuites()
         {
             System.Console.WriteLine("Lista de suites\n");
+            int suiteIndex = 1;
 
             if (listaSuites.Count == 0)
             {
@@ -115,17 +116,21 @@ namespace DesafioProjetoHospedagem.Models
                 foreach (Suite suite in listaSuites)
                 {
                     System.Console.WriteLine(
+                        $"Codigo: {suiteIndex}\n" +
                         $"Suite: {suite.TipoSuite}\n" +
                         $"Capacidade: {suite.Capacidade}\n" +
                         $"Valor diaria: {suite.ValorDiaria}\n"
                     );
+                    suiteIndex++;
                 }
             }
         }
 
         public void RegistrarReserva()
         {
+            Suite suite = new Suite();
             int diasReservados = 0;
+
             System.Console.WriteLine("Reserva de suite\n");
 
             if (listaSuites.Count == 0)
@@ -143,21 +148,25 @@ namespace DesafioProjetoHospedagem.Models
 
                 Reserva reserva = new Reserva(diasReservados);
 
-                System.Console.WriteLine($"Quantidade de hóspede: {listaHospedes.Count}");
+                ListarSuites();
+
+                System.Console.WriteLine($"Quantidade hóspedes: {listaHospedes.Count}");
+                System.Console.Write("Selecione a suite: ");
+                int suiteIndex = Convert.ToInt32(Console.ReadLine());
+
+                suite = listaSuites.ElementAt<Suite>(suiteIndex - 1);
+
+                reserva.CadastrarSuite(suite);
+                reserva.CadastrarHospedes(listaHospedes);
+                System.Console.WriteLine($"Quantidade de hóspede: {reserva.ObterQuantidadeHospedes()}\n");
 
                 foreach (Pessoa hospede in listaHospedes)
                 {
                     System.Console.WriteLine($"Hóspede: {hospede.NomeCompleto}");
                 }
 
-                reserva.CadastrarSuite(suite);
-                reserva.CadastrarHospedes(listaHospedes);
-
-
-                // Console.WriteLine($"Hóspedes: {reserva.ObterQuantidadeHospedes()}");
-                // Console.WriteLine($"Valor diária: {reserva.CalcularValorDiaria()}");
+                Console.WriteLine($"Valor diária: {reserva.CalcularValorDiaria()}");
             }
-
         }
 
         public void QualquerBotao()
